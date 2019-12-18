@@ -1,7 +1,17 @@
 import tkinter as tk
 import sys
-import Add_face
 import Names
+import mysql.connector as connector
+
+
+mydb= connector.connect(host = "localhost", user= "root", passwd = "aayush123", database="testdb")
+cursor = mydb.cursor()
+
+q = "SELECT COUNT(ID) FROM USERS"
+cursor.execute(q)
+result = cursor.fetchall()
+incrementedID = int(result[0][0]) + 1
+
 
 window = tk.Tk()
 
@@ -15,20 +25,8 @@ window.configure(background="#d9d9d9")
 #DEFs
 
 def ADD():
-    
-    Names.EnterData()
-    
-    #Add_face.AddFace()
-
-
-
-
-
-
-
-
-
-
+    window.destroy()
+    Names.EnterData(incrementedID)
 
 
 

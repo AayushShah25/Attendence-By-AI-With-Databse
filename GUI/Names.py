@@ -3,6 +3,8 @@ from tkinter import *
 import tkinter as tk
 from tkinter import ttk
 import mysql.connector as connector
+import CaptureScreen
+
 
 class EnterData():
 
@@ -15,38 +17,49 @@ class EnterData():
     AGEdb=0
     GENDERdb =""
     POSTdb=""
-    CONTACT=0
+    CONTACTdb=0
     ADDRESSdb=""
 
     
 
 
-    def __init__(self):
+    def __init__(self,ID):
 
         def Provide():
-            self.IDdb = ID_ENTRY.get()
+            self.IDdb = ID
             self.NAMEdb = NAME_ENTRY.get()
             self.AGEdb = Spinbox1.get()
-            self.GENDERdb = g
-            print(self.NAMEdb,self.AGEdb,self.IDdb,self.GENDERdb)
+            self.GENDERdb = g.get()
+            self.POSTdb = postValue.get()
+            self.CONTACTdb = ContactEntry.get()
+            self.ADDRESSdb = Text1.get(0.0,END)
+            
+            window.destroy()
+            CaptureScreen.Capture((self.IDdb,self.NAMEdb,self.AGEdb,self.GENDERdb,self.POSTdb,self.CONTACTdb,self.ADDRESSdb))
+            #return (self.NAMEdb,self.AGEdb,self.IDdb,self.GENDERdb,self.POSTdb,self.CONTACTdb,self.ADDRESSdb )
+
+
 
         window = tk.Tk()
 
         window.geometry("600x850")
         window.resizable(0, 0)
-        window.title("New windowlevel")
+        window.title("New Person Entry")
         window.configure(background="#d9d9d9")
 
         # ID Area ------------------------------------------------
-        ID = tk.Label(window,background="#d9d9d9",
+        IDLabel = tk.Label(window,background="#d9d9d9",
                             font="-family {Product Sans} -size 14",
                             foreground="#000000",
                             text='''ID''')
-        ID.place(relx=0.033, rely=0.059, height=91, width=144)
+        IDLabel.place(relx=0.033, rely=0.059, height=91, width=144)
 
         ID_ENTRY = tk.Entry(window,background="white",
                             font="TkFixedFont",
-                            foreground="#000000")
+                            foreground="#000000",
+                            text=self.IDdb)
+        ID_ENTRY.insert(0,ID)
+        ID_ENTRY.configure(state=DISABLED)
         ID_ENTRY.place(relx=0.317, rely=0.094,height=30, relwidth=0.19)
 
         
@@ -90,7 +103,7 @@ class EnterData():
 
         # Gender Area ------------------------------------------------
 
-        g = StringVar()
+        g = StringVar(window)
 
         Label1_8 = tk.Label(window)
         Label1_8.place(relx=0.033, rely=0.363, height=91, width=144)
@@ -133,7 +146,10 @@ class EnterData():
         Label1_9.configure(text='''Employee Post''')
         Label1_9.configure(wraplength="100")
 
-        TCombobox1 = ttk.Combobox(window)
+        posts = ["Accountant", "Cashier", "Worker", "Manager"]
+        postValue = StringVar(window)
+        TCombobox1 = ttk.Combobox(window,value = posts,textvariable = postValue)
+        TCombobox1.set("--- Select Post ---")
         TCombobox1.place(relx=0.317, rely=0.498, relheight=0.048
                 , relwidth=0.272)
 
@@ -149,9 +165,9 @@ class EnterData():
         Label1_10.configure(text='''Contact''')
 
 
-        Entry1_3 = tk.Entry(window)
-        Entry1_3.place(relx=0.317, rely=0.615,height=30, relwidth=0.523)
-        Entry1_3.configure(background="white")
+        ContactEntry = tk.Entry(window)
+        ContactEntry.place(relx=0.317, rely=0.615,height=30, relwidth=0.523)
+        ContactEntry.configure(background="white")
         ############################################################
 
         # Address Area ------------------------------------------------
@@ -173,11 +189,11 @@ class EnterData():
 
 
 
-        Button1 = tk.Button(window, command=Provide)
+        Button1 = tk.Button(window, command=Provide,font="-family {Product Sans} -size 12 -weight bold",fg="white",bg="#800040")
         Button1.place(relx=0.733, rely=0.938, height=34, width=87)
-        Button1.configure(background="#d9d9d9")
+        
         Button1.configure(pady="0")
-        Button1.configure(text='''Button''')
+        Button1.configure(text='''Next > ''')
 
 
 
