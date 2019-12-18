@@ -2,23 +2,25 @@ import cv2
 import numpy as np
 
 from keras.models import load_model
-from FaceEmmbedings import FaceNet
+from FaceEmmbedings2 import FaceNet
 import mysql.connector as connector
 
 mydb= connector.connect(host = "localhost", user= "root", passwd = "aayush123", database="testdb")
 cursor = mydb.cursor()
 
-q = "SELECT name FROM USERS"
+q = "SELECT name FROM attendance"
 cursor.execute(q)
 result = cursor.fetchall()
 
 people = {}
 
 
+
 for i,name in enumerate(result):
     
     people[i] = name[0]
 
+print(people)
 
 model=load_model('face_recognizer.MODEL')
 cascade = cv2.CascadeClassifier('./data/Face.xml')
@@ -71,12 +73,31 @@ while True:
 
             result=int(np.argmax(prediction))
             
-            if(np.max(prediction)>.9999999):
+            if(np.max(prediction)>0.9999):
                 for i in people:
                     
                     if(result==i):
-                        label=people[i]
                         
+                        label=people[i]
+                        pos = int(result)+1
+                        check = "select attend from attendance where ID ="+str(pos)
+                        cursor = mydb.cursor()
+                        cursor.execute(check)
+                        result = cursor.fetchall()
+                        if result[0][0] == 1:
+                            label=people[i]+" You are Present !!! Go Home !"
+                        elif result[0][0] == None:
+                            q = "update attendance set ATTEND = true where id ="+str(pos)
+                            cursor = mydb.cursor()
+                            cursor.execute(q)
+                            mydb.commit()
+
+
+
+
+
+                        
+
                        
                         
             else:
@@ -94,4 +115,6 @@ while True:
         break
 record.release()
 cv2.destroyAllWindows()
+
+
 
