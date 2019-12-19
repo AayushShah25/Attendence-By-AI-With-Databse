@@ -17,7 +17,7 @@ class RemoveField:
             name = self.Entry1.get().title()
             Department= i.get()
 
-            q = "select * from users where Name like'%"+str(name)+"%'  and post='"+str(Department)+"'"
+            q = "select * from users where Name like'%"+str(name)+"%'  and post='"+str(Department)+"' and isin=1"
             print(q)
             cursor.execute(q)
             result = cursor.fetchall()

@@ -1,7 +1,29 @@
 import tkinter as tk
+import mysql.connector as connector
+import TrainFaces
+from tkinter import messagebox
+import shutil # <--- Removes the NON EMPTY directories...
+
+
+mydb = connector.connect(host="localhost", user ="root", passwd="aayush123" , database="testdb")
+cursor = mydb.cursor()
 
 class ListKAKA:
     def __init__(self,Data):
+        def rmv(id):
+            q = "update users set isin = false where id="+str(id)
+            cursor.execute(q)
+            mydb.commit()
+
+            shutil.rmtree(r'C:\Users\GIGABYTE\Desktop\Project\Faces\\'+str(D[0]))
+            top.destroy()
+            y = messagebox.showinfo("Alert","The Person "+D[1]+" of ID : "+str(D[0])+" has been removed from the Database and the training is started,\n which will take some time...")
+
+            TrainFaces.TrainData()
+            import MainPage
+
+
+
        
         top = tk.Tk()
 
@@ -36,17 +58,25 @@ class ListKAKA:
 
             NUMBERLab.append(self.NUMLab)
 
-            self.IMG = tk.Label(top)
             
+            
+            photo = tk.PhotoImage(file=r"C:\Users\GIGABYTE\Desktop\Project\Faces\\"+str(D[0])+"\\5.png")
+            
+            
+
+            self.IMG = tk.Label(top,image=photo)
+            self.IMG.image = photo
+            self.IMG.place(relx=0.35, rely=0.083, height=141, width=164)
             self.IMG.configure(background="#d9d9d9")
             self.IMG.configure(disabledforeground="#a3a3a3")
             self.IMG.configure(foreground="#000000")
             self.IMG.configure(text='''Label''')
+
             IMAGE.append(self.IMG)
 
 
             self.IdLab = tk.Label(top)
-            
+            self.IdLab.place(relx=0.21, rely=0.229, height=41, width=54)
             self.IdLab.configure(background="#d9d9d9")
             self.IdLab.configure(disabledforeground="#a3a3a3")
             self.IdLab.configure(font="-family {Product Sans} -size 12 -weight normal")
@@ -57,7 +87,7 @@ class ListKAKA:
 
 
             self.NAMLab = tk.Label(top)
-            
+            self.NAMLab.place(relx=0.19, rely=0.28, height=41, width=54)
             self.NAMLab.configure(activebackground="#f9f9f9")
             self.NAMLab.configure(activeforeground="black")
             self.NAMLab.configure(background="#d9d9d9")
@@ -72,7 +102,7 @@ class ListKAKA:
 
 
             self.DEPLab = tk.Label(top)
-            
+            self.DEPLab.place(relx=0.12, rely=0.328, height=41, width=94)
             self.DEPLab.configure(activebackground="#f9f9f9")
             self.DEPLab.configure(activeforeground="black")
             self.DEPLab.configure(background="#d9d9d9")
@@ -85,8 +115,8 @@ class ListKAKA:
 
             DEPARTMENLab.append(self.DEPLab)
 
-            self.RMVBut = tk.Button(top)
-            
+            self.RMVBut = tk.Button(top,command=lambda : rmv(D[0]))
+            self.RMVBut.place(relx=0.725, rely=0.253, height=54, width=97)
             self.RMVBut.configure(activebackground="#ececec")
             self.RMVBut.configure(activeforeground="#000000")
             self.RMVBut.configure(background="#800040")
@@ -101,17 +131,17 @@ class ListKAKA:
             REMOVEBut.append(self.RMVBut)
 
             self.IdData = tk.Label(top)
-            
+            self.IdData.place(relx=0.317, rely=0.242, height=21, width=224)
             self.IdData.configure(background="#d9d9d9")
             self.IdData.configure(disabledforeground="#a3a3a3")
             self.IdData.configure(font="-family {Product Sans} -size 12 -weight bold")
             self.IdData.configure(foreground="#000000")
-            self.IdData.configure(text='''Label''')
+            self.IdData.configure(text=D[0])
 
             IDData.append(self.IdData)
 
             self.NMEData = tk.Label(top)
-           
+            self.NMEData.place(relx=0.317, rely=0.292, height=21, width=224)
             self.NMEData.configure(activebackground="#f9f9f9")
             self.NMEData.configure(activeforeground="black")
             self.NMEData.configure(background="#d9d9d9")
@@ -120,12 +150,12 @@ class ListKAKA:
             self.NMEData.configure(foreground="#000000")
             self.NMEData.configure(highlightbackground="#d9d9d9")
             self.NMEData.configure(highlightcolor="black")
-            self.NMEData.configure(text='''Label''')
+            self.NMEData.configure(text=D[1])
 
             NAMEData.append(self.NMEData)
 
             self.DEPData = tk.Label(top)
-            
+            self.DEPData.place(relx=0.317, rely=0.339, height=21, width=224)
             self.DEPData.configure(activebackground="#f9f9f9")
             self.DEPData.configure(activeforeground="black")
             self.DEPData.configure(background="#d9d9d9")
@@ -134,7 +164,7 @@ class ListKAKA:
             self.DEPData.configure(foreground="#000000")
             self.DEPData.configure(highlightbackground="#d9d9d9")
             self.DEPData.configure(highlightcolor="black")
-            self.DEPData.configure(text='''Label''')
+            self.DEPData.configure(text=D[4])
 
             DEPARMENTData.append(self.DEPData)
 
@@ -156,6 +186,8 @@ class ListKAKA:
 
         
         rely=-0.400
+    
+
 
         #print(zip (NUMBERLab,IMAGE,IDLab,NAMELab,DEPARTMENLab,REMOVEBut,IDData,NAMEData,DEPARMENTData))
         
@@ -170,12 +202,6 @@ class ListKAKA:
             idd.place(relx=0.317, rely=0.242+rely, height=21, width=224)
             nmd.place(relx=0.317, rely=0.292+rely, height=21, width=224)
             depd.place(relx=0.317, rely=0.339+rely, height=21, width=224)
-
-            
-
-
-
-            
 
 
         top.mainloop()
