@@ -2,35 +2,37 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import *
 import mysql.connector as connector
-import RList
-mydb = connector.connect(host="localhost", user ="root", passwd="aayush123" , database="testdb")
-
-cursor = mydb.cursor()
+import HList
 
 
 
-class RemoveField:
+
+
+class Hold:
     def __init__(self, top=None):
         
        
-        def RemoveFind():
+        def Find():
+
             name = self.Entry1.get().title()
             Department= i.get()
+            mydb = connector.connect(host="localhost", user ="root", passwd="aayush123" , database="testdb")
 
-            q = "select * from users where Name like'%"+str(name)+"%'  and post='"+str(Department)+"' and isin=1"
+			
+            cursor = mydb.cursor()
+
+            q = "select * from users where Name like'%"+str(name)+"%'  and post='"+str(Department)+"' and isin=1 and hold=0"
             print(q)
             cursor.execute(q)
             result = cursor.fetchall()
 
             print(result)
 
-            if ( len(result) == 0 or result == None):
-                y = messagebox.showinfo("Alert","The Person not Found")
-
+            if (len(result) == 0 or result == None):
+            	messagebox.showinfo("No Result ! ","No match found for the Given info \n Try changing words and post and have an accurate match !")
             else:
-
-                top.destroy()
-                RList.ListKAKA(result)
+            	top.destroy()
+            	HList.ListKAKA(result)
 
 
         top = tk.Toplevel()
@@ -78,7 +80,7 @@ class RemoveField:
         self.TCombobox1.configure(textvariable=i)
         
 
-        self.Button1 = tk.Button(top,command=RemoveFind)
+        self.Button1 = tk.Button(top,command=Find)
         self.Button1.place(relx=0.344, rely=0.718, height=74, width=187)
         self.Button1.configure(activebackground="#ececec")
         self.Button1.configure(activeforeground="#000000")
@@ -97,11 +99,10 @@ class RemoveField:
         self.Label2.configure(disabledforeground="#a3a3a3")
         self.Label2.configure(font="-family {Product Sans} -size 24 -weight normal")
         self.Label2.configure(foreground="#000000")
-        self.Label2.configure(text='''Removing A Person''')
+        self.Label2.configure(text='''Hold A Person for Leave ''')
 
 
         top.mainloop()
-
 
 
 

@@ -40,7 +40,7 @@ class EnterData():
 
 
 
-        window = tk.Tk()
+        window = tk.Toplevel()
 
         window.geometry("600x850")
         window.resizable(0, 0)
@@ -52,12 +52,14 @@ class EnterData():
                             font="-family {Product Sans} -size 14",
                             foreground="#000000",
                             text='''ID''')
+                            
         IDLabel.place(relx=0.033, rely=0.059, height=91, width=144)
 
         ID_ENTRY = tk.Entry(window,background="white",
                             font="TkFixedFont",
                             foreground="#000000",
                             text=self.IDdb)
+        ID_ENTRY.delete(0,END)
         ID_ENTRY.insert(0,ID)
         ID_ENTRY.configure(state=DISABLED)
         ID_ENTRY.place(relx=0.317, rely=0.094,height=30, relwidth=0.19)

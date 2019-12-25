@@ -1,37 +1,27 @@
 import tkinter as tk
 import mysql.connector as connector
-import TrainFaces
+
 from tkinter import messagebox
 import shutil # <--- Removes the NON EMPTY directories...
 import MainPage
 
 
 
+
 class ListKAKA:
     def __init__(self,Data):
 
-        mydb = connector.connect(host="localhost", user ="root", passwd="aayush123" , database="testdb")
-        cursor = mydb.cursor()
+        def hld(id):
 
-        def rmv(id):
+            print("The Coming Id is  : ", id)
 
-            mydb = connector.connect(host="localhost", user ="root", passwd="aayush123" , database="testdb")
-            cursor = mydb.cursor()
-            
-            q = "update users set isin = false where id="+str(id)
+            mydb= connector.connect(host = "localhost", user= "root", passwd = "aayush123", database="testdb")
+            cursor = mydb.cursor()                
+            q = "update users set hold = true where id="+str(id)
             cursor.execute(q)
             mydb.commit()
 
-            try:
-
-                shutil.rmtree(r'C:\Users\GIGABYTE\Desktop\Project\Faces\\'+str(D[0]))
-            except Exception:
-                print('Error in Deleting the File !!')
-
-
-
-
-            cursor = mydb.cursor()
+            cursor = mydb.cursor()                
             q = "select name from users where id="+str(id)
             cursor.execute(q)
             
@@ -39,17 +29,14 @@ class ListKAKA:
             result = cursor.fetchall()
             result=result[0][0]
             top.destroy()
-            
-            
-            y = messagebox.showinfo("Alert","The Person "+result+" of ID : "+str(id)+" has been removed from the Database and the training is started,\n which will take some time...")
+            y = messagebox.showinfo("Hold ","The Person "+result+" of ID : "+str(id)+" Has been put on hold...")
 
-            TrainFaces.TrainData()
-
+            
             MainPage.MAINCALL()
 
 
 
-       
+
         top = tk.Toplevel()
 
         top.geometry("600x963")
@@ -86,10 +73,14 @@ class ListKAKA:
             
             
             photo = tk.PhotoImage(file=r"C:\Users\GIGABYTE\Desktop\Project\Faces\\"+str(D[0])+"\\5.png")
-            
+            print(r"C:\Users\GIGABYTE\Desktop\Project\Faces\\"+str(D[0])+"\\5.png")
+            print("\n Len of DATA [] = ", len(Data))
+
+
             
 
-            self.IMG = tk.Label(top,image=photo)
+            self.IMG = tk.Label(top)
+            self.IMG.configure(image=photo)
             self.IMG.image = photo
             self.IMG.place(relx=0.35, rely=0.083, height=141, width=164)
             self.IMG.configure(background="#d9d9d9")
@@ -140,7 +131,10 @@ class ListKAKA:
 
             DEPARTMENLab.append(self.DEPLab)
 
-            self.RMVBut = tk.Button(top,command=lambda : rmv(D[0]))
+            
+            I = D[0]
+            self.RMVBut = tk.Button(top,command=lambda I=I : hld(I))
+            self.RMVBut.command = lambda : hld(D[0])
             self.RMVBut.place(relx=0.725, rely=0.253, height=54, width=97)
             self.RMVBut.configure(activebackground="#ececec")
             self.RMVBut.configure(activeforeground="#000000")
@@ -151,7 +145,7 @@ class ListKAKA:
             self.RMVBut.configure(highlightbackground="#d9d9d9")
             self.RMVBut.configure(highlightcolor="black")
             self.RMVBut.configure(pady="0")
-            self.RMVBut.configure(text='''Remove''')
+            self.RMVBut.configure(text='''Hold''')
 
             REMOVEBut.append(self.RMVBut)
 

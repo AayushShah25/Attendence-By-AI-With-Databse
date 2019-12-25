@@ -4,24 +4,34 @@ import mysql.connector as connector
 import Names
 import TrainFaces
 from tkinter import messagebox
+import os
 
-mydb= connector.connect(host = "localhost", user= "root", passwd = "aayush123", database="testdb")
-cursor = mydb.cursor()
+
+
 
 class Show:
     def __init__(self, Details):
+        global saved_
+        saved_ = False        
 
         def Another():
+            global saved_
 
-            
+            if saved_ == False:
 
-            q = "insert into users (name,age,gender,post,contact,address) values ( %s , %s , %s , %s , %s , %s )"
+                mydb= connector.connect(host = "localhost", user= "root", passwd = "aayush123", database="testdb")
+                cursor = mydb.cursor()
+                q = "insert into users (name,age,gender,post,contact,address) values ( %s , %s , %s , %s , %s , %s )"
 
-            data = [(Details[1], int(Details[2]), Details[3], Details[4], Details[5], Details[6]) ]
-            print(data)
-            cursor.executemany(q,data)
-            mydb.commit()
+                data = [(Details[1], int(Details[2]), Details[3], Details[4], Details[5], Details[6]) ]
+                print(data)
+                cursor.executemany(q,data)
+                mydb.commit()
+                saved_ = True
 
+
+            mydb= connector.connect(host = "localhost", user= "root", passwd = "aayush123", database="testdb")
+            cursor = mydb.cursor()
 
             cursor.execute("Select count(ID) from users")
             result = cursor.fetchall()
@@ -34,27 +44,47 @@ class Show:
 
         def Train():
 
+            global saved_
+            if saved_ == False:
+
+                mydb= connector.connect(host = "localhost", user= "root", passwd = "aayush123", database="testdb")
+                cursor = mydb.cursor()
+                q = "insert into users (name,age,gender,post,contact,address) values ( %s , %s , %s , %s , %s , %s )"
+
+                data = [(Details[1], int(Details[2]), Details[3], Details[4], Details[5], Details[6]) ]
+                print(data)
+                cursor.executemany(q,data)
+                mydb.commit()
+                saved_ = True
             
+            try:
+                num_of_persons = os.listdir('../Faces')
+            except Exception:
 
-            q = "insert into users (name,age,gender,post,contact,address) values ( %s , %s , %s , %s , %s , %s )"
+                print("ERROR")
 
-            data = [(Details[1], int(Details[2]), Details[3], Details[4], Details[5], Details[6]) ]
-            print(data)
-            cursor.executemany(q,data)
-            mydb.commit()
-            
-            y = messagebox.showinfo("Alert","The Training will Take some time, You may have to wait.")
-            top.destroy()
+            if len(num_of_persons) <= 1:
+                y = messagebox.showinfo("Can't ! ","Only one person is there... Please Add more to get ahead and train the model. \n To add, please click on ADD MORE")
+                self.TRAINbtn.configure(state="disabled")
 
-            if y:
-                TrainFaces.TrainData()
+
+                
             else:
-                TrainFaces.TrainData()
 
-            print("The Model is Saved.")
-            import MainPage
 
-        top = tk.Tk()
+                y = messagebox.showinfo("Alert","The Training will Take some time, You may have to wait.")
+                top.destroy()
+
+                if y:
+                    TrainFaces.TrainData()
+                else:
+                    TrainFaces.TrainData()
+
+                print("The Model is Saved.")
+
+                import MainPage
+
+        top = tk.Toplevel()
 
         top.geometry("600x1000")
         

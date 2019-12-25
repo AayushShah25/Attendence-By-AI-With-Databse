@@ -15,7 +15,7 @@ class Capture:
 
 
 
-        top = tk.Tk()
+        top = tk.Toplevel()
         top.geometry("600x500")
        
         
