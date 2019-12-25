@@ -1,20 +1,15 @@
 import cv2
-import matplotlib.pyplot as plt
 import os
 import time
-import mysql.connector as connector
+import numpy as np
+
 
 
 class AddFace:
 
-    def __init__(self):
-        mydb= connector.connect(host = "localhost", user= "root", passwd = "aayush123", database="testdb")
-        cursor = mydb.cursor()
-
-        q = "SELECT COUNT(ID) FROM USERS"
-
-        cursor.execute(q)
-        result = cursor.fetchall()
+    def __init__(self,ID):
+        
+        
 
         kaka = cv2.CascadeClassifier('../DATA/face.xml')
 
@@ -24,16 +19,45 @@ class AddFace:
 
             
 
-        name = int(result[0][0]) + 1
+        name = ID
         name = str(name)
-        os.mkdir('../faces/'+name)
+        try:
+
+            os.mkdir('../faces/'+name)
+
+        except FileExistsError:
+
+            pass
+
         goodNAMES = False
-        print("Folder Created as ID : ", name, "<---- In Path -----> " , os.getcwd() )
+        print("Folder Created as ID ---->  ", name, "\nIn Path -----> " , os.getcwd() )
         time.sleep(3)
-          
+        
+        
+        k = 3
+        while True:
+
+            black = np.zeros((600,600,3))
+            cv2.putText(black,str(k), (200,400), cv2.FONT_HERSHEY_SIMPLEX, 10, (255,0,255), 15)
+
             
             
+            cv2.imshow("SET",black)
+
+            k-=1
+
             
+            cv2.waitKey(1000)
+
+            if k == 0:
+                black = np.zeros((600,600,3))
+                cv2.putText(black,"SMILE", (60,350), cv2.FONT_HERSHEY_SIMPLEX, 5, (255,0,255), 15)
+                cv2.imshow("SET",black)
+                cv2.waitKey(1000)
+                
+                break
+            
+        cv2.destroyAllWindows()
 
 
         while True:
@@ -53,7 +77,7 @@ class AddFace:
             else:
                 x,y,w,h = detection[0]
                 count += 1
-                cv2.imwrite('../faces/'+name +"/"+str(count)+".jpg", frame[y:y+h, x:x+w])
+                cv2.imwrite('../faces/'+name +"/"+str(count)+".png", frame[y:y+h, x:x+w])
                 cv2.rectangle(frame,(x,y), ((x+w), (y+h)), (255,0,0),3)
                 
                    
@@ -74,6 +98,5 @@ class AddFace:
         record.release()
 
 
-        q= "insert into users (name) values ('AAYUSH')"
-        cursor.execute(q)
-        mydb.commit()
+        
+        

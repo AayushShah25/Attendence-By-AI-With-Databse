@@ -105,6 +105,8 @@ Vectorizer= FaceNet()
 record = cv2.VideoCapture(0)
 
 
+guessFaces = []
+
 while True:
     
     faces = []
@@ -145,7 +147,7 @@ while True:
             
             prediction=model.predict(feed)[0]
 
-            result=int(np.argmax(prediction))
+            result=int(np.argmax(prediction)) # 3
             
             if(np.max(prediction)>0.9999):
                 for i in people:
@@ -153,44 +155,88 @@ while True:
                     if(result==i):
                         
                         label=people[i]
+                        guessFaces.append(people[i])
 
-                        pos = int(result)+1
-                        check = "select attend from attendance where ID ="+str(pos)
-                        cursor = mydb.cursor()
-                        cursor.execute(check)
-                        result = cursor.fetchall()
-                        
-                        if result[0][0] == 1:
-                            label=people[i]+" You are Present !!! Go Home !"
-                        elif ( result[0][0] == None or result[0][0] == 0 ):
+                        if len(guessFaces) >= 50:
 
-                            checkforHold = "select hold from attendance where id="+str(pos)
-                            cursor = mydb.cursor()
-                            cursor.execute(checkforHold)
-                            resYes = cursor.fetchall()
+                            
 
-                            if resYes[0][0] == 0:
+                            count = {}
 
-                                q = "update attendance set ATTEND = true where id ="+str(pos)
+                            for I in guessFaces:
 
+                                count[I] = guessFaces.count(I)
+
+
+                            count = dict( (v,k) for k,v in count.items() )
+
+                            print(count)
+                            print(count[max(count)])
+
+                            if max(count) >= 45:
+                                ##Provide a Label and Do Stuff
+                                
+                                print ("Inside More than 45 : Getting Attend !!")
+                                
+                                resultRev = dict((v,k) for k,v in people.items())
+                                
+                                a_person_ID = resultRev[count[max(count)]]
+                                
+                                pos = int(a_person_ID)+1
+                                mydb= connector.connect(host = "localhost", user= "root", passwd = "aayush123", database="testdb")
                                 cursor = mydb.cursor()
-                                cursor.execute(q)
-                                mydb.commit()
+                                check = "select attend from attendance where ID ="+str(pos)
+                                
+                                cursor.execute(check)
+                                resultYN = cursor.fetchall()
+                                print("Result came : ", resultYN)
+                                
+                                if resultYN[0][0] == 1:
+
+                                    label=people[i]+" You are Present !!! Go Home !"
+                                    guessFaces = []    
+
+                                elif (resultYN[0][0] == None or resultYN[0][0] == 0):
+                                    mydb= connector.connect(host = "localhost", user= "root", passwd = "aayush123", database="testdb")
+                                    cursor = mydb.cursor()
+                                    checkforHold = "select hold from attendance where id="+str(pos)
+                                    
+                                    cursor.execute(checkforHold)
+                                    resYes = cursor.fetchall()
+
+                                    if resYes[0][0] == 0:
+                                        mydb= connector.connect(host = "localhost", user= "root", passwd = "aayush123", database="testdb")
+                                        
+                                        q = "update attendance set ATTEND = true where id ="+str(pos)
+
+                                        cursor = mydb.cursor()
+                                        cursor.execute(q)
+                                        mydb.commit()
+                                        guessFaces = []
+
+                                    else:
+
+                                        label = "Unknown"
+                                        now= datetime.now()
+                                        now= now.strftime("%H%M%S")
+                                        try:
+
+                                            cv2.imwrite("./Unknowns/"+today+"/"+str(now)+".png", FaceIsolated)
+
+                                        except Exception:
+                                            print('Error in Saving the Unknown face... Please Restart the System.')
+
+                                        guessFaces = []    
+
+
+
 
                             else:
 
-                                label = "Unknown"
-                                now= datetime.now()
-                                now= now.strftime("%H%M%S")
-                                try:
+                                guessFaces = []
+                            
 
-                                    cv2.imwrite("./Unknowns/"+today+"/"+str(now)+".png", FaceIsolated)
-
-                                except Exception:
-                                    print('Error in Saving the Unknown face... Please Restart the System.')
-
-
-
+                            
 
 
                         
@@ -210,8 +256,8 @@ while True:
                 label='Unknown'
            
 
-
-            cv2.putText(frame,label,(coordinate[0],coordinate[1]),cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,200),2)
+            
+            cv2.putText(frame,label+" : "+str(len(guessFaces)),(coordinate[0],coordinate[1]),cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,200),2)
             
             cv2.rectangle(frame,(coordinate[0],coordinate[1]),(coordinate[0] + coordinate[2] , coordinate[1] + coordinate[3]),(123,234,1),3)
             
