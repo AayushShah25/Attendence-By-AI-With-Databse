@@ -399,3 +399,39 @@ while True: # Just for Check ( Continuous check )
 
 cv2.destroyAllWindows()
 record.release()
+
+
+month = date.today()
+month = month.strftime("%B-%Y")
+
+f_list = os.listdir(r'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/')
+
+
+if month not in f_list:
+    
+    os.mkdir(r'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/'+month)
+
+
+mydb= connector.connect(host = "localhost", user= "root", passwd = "aayush123", database="testdb")
+cursor = mydb.cursor()
+
+q = "SELECT ID,name,attend FROM attendance INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/"+month+"/"+ str(today) +".csv' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n';"
+
+try:
+    
+    print('Normal')
+    cursor.execute(q)
+    print('Normal DONE !')
+    
+except Exception:
+    print('Exeption')    
+    os.chmod('C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/'+str(month)+'/',0o777)
+    try:
+        
+        print('Second')
+        os.remove(r'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/'+str(month)+'/'+ str(today) +'.csv')
+        cursor.execute(q)
+        print('Second Done')
+    except FileNotFoundError:
+        
+        cursor.execute(q)
