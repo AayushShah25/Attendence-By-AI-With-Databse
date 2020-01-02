@@ -8,7 +8,11 @@ class DNN:
         self.classes=classes
         
     def create(self):
-        self.model.add(Dense(64,input_dim=128))
+        
+        self.model.add(Dense(128,input_dim=128))
+        self.model.add(LeakyReLU(alpha=0.1))
+        
+        self.model.add(Dense(64))
         self.model.add(LeakyReLU(alpha=0.1))
         
         self.model.add(Dense(32))

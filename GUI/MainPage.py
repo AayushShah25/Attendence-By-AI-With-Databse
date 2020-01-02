@@ -9,6 +9,7 @@ import Hold
 import Remove
 import ReList
 import TrainFaces
+import FindImprove
 
 class MAINCALL():
 
@@ -34,6 +35,10 @@ class MAINCALL():
 
         #DEFs
         
+        def Improve():
+            window.destroy()
+            FindImprove.FindForImprove()
+            
         def ADD():
             window.destroy()
             Names.EnterData(incrementedID)
@@ -107,7 +112,12 @@ class MAINCALL():
           #--------------------------------------------------------------------------------------------
 
         train = tk.Button(window, text = "Train System", font="-family {Product Sans} -size 14 -weight bold", command=Train, bg = "#800040", fg="#FFFFFF")
-        train.place(relx=0.375, rely=0.400, height=100, width=150)
+        train.place(relx=0.375, rely=0.350, height=100, width=150)
+
+
+        Improve = tk.Button(window, text = "Improve for Training", font="-family {Product Sans} -size 14 -weight bold", bg = "#800040", fg="#FFFFFF", wraplength="100", command = Improve)
+        Improve.place(relx=0.375, rely=0.600, height=100, width=150)
+        
 
 
 

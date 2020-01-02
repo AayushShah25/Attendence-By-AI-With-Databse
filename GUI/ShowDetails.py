@@ -5,15 +5,45 @@ import Names
 import TrainFaces
 from tkinter import messagebox
 import os
-
+import EditEnter
+import CaptureScreen
+import webbrowser
 
 
 
 class Show:
     def __init__(self, Details):
         global saved_
-        saved_ = False        
+        saved_ = False  
 
+        def CheckPhotos():
+            
+            try:
+
+                if (webbrowser.open(r'C:\Users\GIGABYTE\Desktop\Project\Faces\\'+ str(Details[0]))):
+                    pass
+                else:
+                    print (' No File Found Error ')
+                    
+            except Exception:
+
+                print('Error in opening the Folder ')
+        def Re():
+            print('Here in Re Take Images')
+            top.destroy()
+            CaptureScreen.Capture(Details)
+
+
+        def Edit():
+            
+            
+            print('HERE ! In Edit Info')
+            top.destroy()
+            print(Details)
+            EditEnter.Editorial(Details)
+            
+            
+            
         def Another():
             global saved_
 
@@ -116,6 +146,9 @@ class Show:
         self.IMAGE.configure(highlightbackground="#d9d9d9")
         self.IMAGE.configure(highlightcolor="black")
         self.IMAGE.configure(text='''IMAGE''')
+
+        self.CheckBt = tk.Button(top, text = "Check The Photos",font="-family {Product Sans} -size 12 -weight bold",fg="white",bg="#800040", command = CheckPhotos , wraplength="150")
+        self.CheckBt.place(relx = 0.722, rely = 0.09, height =80 , width=150 )
 
         self.NAME = tk.Label(top,font="-family {Product Sans} -size 18 -weight normal")
         self.NAME.place(relx=0.2, rely=0.35, height=71, width=114)
@@ -262,15 +295,18 @@ class Show:
         self.ADDRESSd.configure(text=Details[6])
 
         self.ADDMOREbtn = tk.Button(top,text = "ADD ONE MORE",font="-family {Product Sans} -size 12 -weight bold",fg="white",bg="#800040",command=Another)
-        self.ADDMOREbtn.place(relx=0.15,rely=0.93,height=50,width=150)
+        self.ADDMOREbtn.place(relx=0.05,rely=0.93,height=50,width=150)
+        
+        self.ADDMOREbtn = tk.Button(top,text = "Edit Info",font="-family {Product Sans} -size 12 -weight bold",fg="white",bg="#248396",command=Edit)
+        self.ADDMOREbtn.place(relx=0.34,rely=0.93,height=50,width=80)
+
+        self.ADDMOREbtn = tk.Button(top,text = "Retake Photos",font="-family {Product Sans} -size 12 -weight bold",fg="white",bg="#248396",wraplength="60",command=Re)
+        self.ADDMOREbtn.place(relx=0.52,rely=0.93,height=50,width=80)
 
         self.TRAINbtn = tk.Button(top,text = "TRAIN ALL FACES",font="-family {Product Sans} -size 12 -weight bold",fg="white",bg="#700100",command=Train)
-        self.TRAINbtn.place(relx=0.55,rely=0.93,height=50,width=150)
+        self.TRAINbtn.place(relx=0.70,rely=0.93,height=50,width=150)
 
         #Edit Button Baki chhe.
         top.mainloop()
-
-
-
 
 

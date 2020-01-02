@@ -1,15 +1,28 @@
 
 import tkinter as tk
 import Add_face
+import Add_Face_For_Improve
 import ShowDetails
+import MainPage
+from tkinter import messagebox
 
 class Capture:
-    def __init__(self,Details):
+    def __init__(self,Details, StartFrom = None):
 
         def StartCapturing():
             top.destroy()
-            Add_face.AddFace(Details[0])
-            ShowDetails.Show(Details)
+            
+            if StartFrom == None:
+                Add_face.AddFace(Details[0])
+                ShowDetails.Show(Details)
+            else:
+                
+                print('Getting Face')
+                Add_Face_For_Improve.AddFace(Details,StartFrom)
+                print('First ENTERD')
+                messagebox.showinfo("TRAIN FOR GOOD RESULTS", "The New faces are added, plese go ahead and Re-Train the model to improve accuracy.")
+                MainPage.MAINCALL()
+                
 
 
 
